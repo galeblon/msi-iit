@@ -3,19 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MsiImageIndexer"
+        xmlns:local="clr-namespace:MsiImageIndexer" xmlns:model="clr-namespace:MsiImageIndexer.model" d:DataContext="{d:DesignInstance Type=model:ViewModel}"
         mc:Ignorable="d"
         Title="MSI - Image Indexing Tool" Height="450" Width="800" Foreground="#FFBB4E4E" BorderBrush="#FF993939" MinWidth="1024" MinHeight="640">
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                 <Menu Margin="0,0,0,0" Height="20" VerticalAlignment="Top">
-                    <MenuItem Header="Load _Configuration"/>
-                    <MenuItem Header="Load _Input"/>
-                    <MenuItem Header="_Save" IsEnabled="False"/>
-                    <MenuItem Header="Save _As" IsEnabled="False"/>
+                    <MenuItem x:Name="LoadConfigButton" Header="Load _Configuration" Click="LoadConfigButton_Click"/>
+                    <MenuItem x:Name="LoadDataButton" Header="Load _Input" IsEnabled="{Binding IsConfigLoaded}" Click="LoadDataButton_Click"/>
+                    <MenuItem x:Name="SaveButton" Header="_Save" IsEnabled="{Binding IsConfigLoaded}"/>
+                    <MenuItem x:Name="SaveAsButton" Header="Save _As" IsEnabled="{Binding IsConfigLoaded}"/>
                 </Menu>
-                <Label Background="#FFBDBDBD" Content="Current configuration:&#x9;null" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
+                <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>
             <ListBox DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="200">
                 <ListBoxItem>Test</ListBoxItem>
@@ -44,24 +44,23 @@
                 <ListBoxItem>Test2</ListBoxItem>
             </ListBox>
             <GroupBox DockPanel.Dock="Right" Width="260">
-                <DockPanel>
-                    <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <StackPanel Orientation="Vertical">
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
-                            <Label>PlaceHolder</Label>
+                <DockPanel Width="250">
+                    <DockPanel DockPanel.Dock="Top" Width="250" Height="280">
+                        <Label x:Name="CurrentPositionLabel" DockPanel.Dock="Top" Background="LightGray" Content="{Binding CurrentPositionLabel}" Margin="0,0,0,0" Height="30" Width="250"/>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Background="IndianRed" Content="-" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBox Text="100%" TextWrapping="Wrap" Width="120"/>
+                            <Button Background="PaleGreen" Content="+" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </StackPanel>
+                        <Canvas x:Name="PrecisionCanvas" Margin="0,0,0,0" Background="Beige" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Panel.ZIndex="3"/>
                     </DockPanel>
-                    <DockPanel>
-                        <Label DockPanel.Dock="Top" Background="LightGray" Content="       [current x] [current y]" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
-                        <Canvas Margin="0,0,0,0" Background="Beige" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                    <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <DockPanel Margin="0,10,0,0">
+                            <ScrollViewer DockPanel.Dock="Bottom" Height="140" Cursor="Arrow" Margin="0,0,0,0" >
+                                <TextBlock x:Name="ReferenceImageLabel" Width="250" Text="This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference. Lorem ipsum dolores test.This is description for the image reference. Lorem ipsum dolores test.This is description for the image reference. Lorem ipsum dolores test." TextWrapping="Wrap" Margin="0,10,0,0"/>
+                            </ScrollViewer>
+                            <Image x:Name="ReferenceImageImage" Source="/no_img.png" MinWidth="120" MinHeight="120" MaxWidth="250" MaxHeight="250" Margin="0,0,0,10" Height="Auto" Panel.ZIndex="1"/>
+                        </DockPanel>
                     </DockPanel>
                 </DockPanel>
             </GroupBox>
@@ -80,10 +79,10 @@
             </GroupBox>
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top" VerticalAlignment="Top">
-                    <Label DockPanel.Dock="Right" Background="LightGray" Content="image 97/100" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right"/>
-                    <Label Background="LightGray" Content="Image title" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Stretch"/>
+                    <Label x:Name="ImageIndexLabel" DockPanel.Dock="Right" Background="LightGray" Content="image 97/100" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right"/>
+                    <Label x:Name="CurrentImageLabel" Background="LightGray" Content="Image title" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Stretch"/>
                 </DockPanel>
-                <Canvas Margin="0,0,0,0" Background="Beige"/>
+                <Canvas x:Name="MainCanvas" Margin="0,0,0,0" Background="Beige" MouseMove="MainCanvas_MouseMove" Cursor="Cross"/>
             </DockPanel>
         </DockPanel>
 
