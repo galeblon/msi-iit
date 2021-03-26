@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace MsiImageIndexer.model
 {
-    public class Point
+    public class NamedPoint
     {
         [XmlElement("name")]
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace MsiImageIndexer.model
     public class PointCollection
     {
         [XmlArray("points")]
-        [XmlArrayItem("point", typeof(Point))]
-        public Point[] Points { get; set; }
+        [XmlArrayItem("point", typeof(NamedPoint))]
+        public NamedPoint[] Points { get; set; }
     }
 }

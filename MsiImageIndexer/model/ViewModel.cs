@@ -8,6 +8,7 @@ namespace MsiImageIndexer.model
     public class ViewModel : INotifyPropertyChanged
     {
         public bool IsConfigLoaded { get { return pointCollection != null; } }
+        public bool IsDataLoaded { get { return indexedImages.Count > 0;  } }
 
         private PointCollection pointCollection = null;
         public PointCollection PointCollection
@@ -58,6 +59,39 @@ namespace MsiImageIndexer.model
             get { return $"X = [{x, 10}]\tY = [{y, 10}]"; }
         }
 
+        private List<IndexedImage> indexedImages = new List<IndexedImage>();
+        public List<IndexedImage> IndexedImages 
+        {
+            get { return indexedImages; }
+            set 
+            {
+                indexedImages = value;
+                UpdateProperty("IndexedImages");
+                UpdateProperty("IsDataLoaded");
+            }
+        }
+
+        private IndexedImage currentIndexedImage = null;
+        public IndexedImage CurrentIndexedImage 
+        {
+            get { return currentIndexedImage; }
+            set 
+            {
+                currentIndexedImage = value;
+                UpdateProperty("CurrentIndexedImage");
+                UpdateProperty("CurrentIndexedImageIndex");
+            }
+        }
+        public int CurrentIndexedImageIndex 
+        {
+            get { return indexedImages != null ? indexedImages.IndexOf(currentIndexedImage) : 0; }
+            set 
+            {
+                currentIndexedImage = indexedImages[value];
+                UpdateProperty("CurrentIndexedImage");
+                UpdateProperty("CurrentIndexedImageIndex");
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

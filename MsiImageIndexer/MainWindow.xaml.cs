@@ -78,8 +78,18 @@ namespace MsiImageIndexer
                     try 
                     {
                         DirectoryInfo directoryInfo = new DirectoryInfo(dirName);
-                        int count = directoryInfo.GetFiles().Select(f => Regex.Match(f.Extension, "(png)|(jpg)|(jpeg)", RegexOptions.IgnoreCase)).Count();
-                        MessageBox.Show($"Loaded {count} images to index", "Data load succes");
+                        var images = directoryInfo.GetFiles().Where(f => Regex.Match(f.Extension, "(png)|(jpg)|(jpeg)", RegexOptions.IgnoreCase).Success);
+                        var imagesToIndex = images.Select(f => 
+                            new IndexedImage 
+                            {
+                                Image = new Uri(f.ToString()), 
+                                MarkedPoints = new List<MarkedPoint>(), 
+                                PointsToMark = this.viewModel.PointCollection.Points.ToList() 
+                            })
+                            .ToList();
+                        this.viewModel.IndexedImages = imagesToIndex;
+                        this.viewModel.CurrentIndexedImage = imagesToIndex.FirstOrDefault();
+                        MessageBox.Show($"Loaded {imagesToIndex.Count()} images to index", "Data load succes");
                     }
                     catch(Exception ex)
                     {
@@ -99,6 +109,22 @@ namespace MsiImageIndexer
 
             this.viewModel.X = e.GetPosition(MainCanvas).X;
             this.viewModel.Y = e.GetPosition(MainCanvas).Y;
+        }
+
+        private void PreviousImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.viewModel.IndexedImages != null & this.viewModel.CurrentIndexedImage != null)
+            {
+                this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == 0 ? this.viewModel.IndexedImages.Count - 1 : this.viewModel.CurrentIndexedImageIndex - 1;
+            }
+        }
+
+        private void NextImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.viewModel.IndexedImages != null & this.viewModel.CurrentIndexedImage != null)
+            {
+                this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == this.viewModel.IndexedImages.Count - 1 ? 0 : this.viewModel.CurrentIndexedImageIndex + 1;
+            }
         }
     }
 }

@@ -3,17 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MsiImageIndexer" xmlns:model="clr-namespace:MsiImageIndexer.model" d:DataContext="{d:DesignInstance Type=model:ViewModel}"
+        xmlns:local="clr-namespace:MsiImageIndexer" xmlns:converters="clr-namespace:MsiImageIndexer.converters"  xmlns:model="clr-namespace:MsiImageIndexer.model" d:DataContext="{d:DesignInstance Type=model:ViewModel}"
         mc:Ignorable="d"
         Title="MSI - Image Indexing Tool" Height="450" Width="800" Foreground="#FFBB4E4E" BorderBrush="#FF993939" MinWidth="1024" MinHeight="640">
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:IndexConverter x:Key="IndexConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                 <Menu Margin="0,0,0,0" Height="20" VerticalAlignment="Top">
                     <MenuItem x:Name="LoadConfigButton" Header="Load _Configuration" Click="LoadConfigButton_Click"/>
                     <MenuItem x:Name="LoadDataButton" Header="Load _Input" IsEnabled="{Binding IsConfigLoaded}" Click="LoadDataButton_Click"/>
-                    <MenuItem x:Name="SaveButton" Header="_Save" IsEnabled="{Binding IsConfigLoaded}"/>
-                    <MenuItem x:Name="SaveAsButton" Header="Save _As" IsEnabled="{Binding IsConfigLoaded}"/>
+                    <MenuItem x:Name="SaveButton" Header="_Save" IsEnabled="{Binding IsDataLoaded}"/>
+                    <MenuItem x:Name="SaveAsButton" Header="Save _As" IsEnabled="{Binding IsDataLoaded}"/>
                 </Menu>
                 <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>
@@ -67,8 +72,8 @@
             <GroupBox DockPanel.Dock="Bottom">
                 <StackPanel>
                     <DockPanel>
-                        <Button DockPanel.Dock="Left" Content="Previous Image" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Bottom" Height="20"/>
-                        <Button DockPanel.Dock="Right" Content="Next Image" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="85"/>
+                        <Button IsEnabled="{Binding IsDataLoaded}" x:Name="PreviousImageButton" DockPanel.Dock="Left" Content="Previous Image" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Bottom" Height="20" Click="PreviousImageButton_Click"/>
+                        <Button IsEnabled="{Binding IsDataLoaded}" x:Name="NextImageButton" DockPanel.Dock="Right" Content="Next Image" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="85" Click="NextImageButton_Click"/>
                         <ComboBox Margin="5,0,5,0" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                             <ComboBoxItem>Point Name 1</ComboBoxItem>
                             <ComboBoxItem>Point Name 2</ComboBoxItem>
@@ -79,10 +84,25 @@
             </GroupBox>
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top" VerticalAlignment="Top">
-                    <Label x:Name="ImageIndexLabel" DockPanel.Dock="Right" Background="LightGray" Content="image 97/100" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right"/>
-                    <Label x:Name="CurrentImageLabel" Background="LightGray" Content="Image title" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Stretch"/>
+                    <Label x:Name="ImageIndexLabel" DockPanel.Dock="Right" Background="LightGray" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Right">
+                        <Label.Content>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="image {0}/{1}">
+                                        <Binding Path="CurrentIndexedImageIndex" Converter="{StaticResource IndexConverter}" />
+                                        <Binding Path="IndexedImages.Count"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
+                    <Label x:Name="CurrentImageLabel" Background="LightGray" Content="{Binding CurrentIndexedImage.Image}" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Stretch"/>
                 </DockPanel>
-                <Canvas x:Name="MainCanvas" Margin="0,0,0,0" Background="Beige" MouseMove="MainCanvas_MouseMove" Cursor="Cross"/>
+                <Canvas x:Name="MainCanvas" Margin="0,0,0,0" MouseMove="MainCanvas_MouseMove" Cursor="Cross">
+                    <Canvas.Background>
+                        <ImageBrush ImageSource="{Binding CurrentIndexedImage.Image}"/>
+                    </Canvas.Background>
+                </Canvas>
             </DockPanel>
         </DockPanel>
 
