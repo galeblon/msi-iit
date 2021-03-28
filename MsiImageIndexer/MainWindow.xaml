@@ -62,9 +62,9 @@
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DockPanel Margin="0,10,0,0">
                             <ScrollViewer DockPanel.Dock="Bottom" Height="140" Cursor="Arrow" Margin="0,0,0,0" >
-                                <TextBlock x:Name="ReferenceImageLabel" Width="250" Text="This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference.This is description for the image reference. Lorem ipsum dolores test.This is description for the image reference. Lorem ipsum dolores test.This is description for the image reference. Lorem ipsum dolores test." TextWrapping="Wrap" Margin="0,10,0,0"/>
+                                <TextBlock x:Name="ReferenceImageLabel" Width="250" Text="{Binding CurrentNamedPoint.Description}" TextWrapping="Wrap" Margin="0,10,0,0"/>
                             </ScrollViewer>
-                            <Image x:Name="ReferenceImageImage" Source="/no_img.png" MinWidth="120" MinHeight="120" MaxWidth="250" MaxHeight="250" Margin="0,0,0,10" Height="Auto" Panel.ZIndex="1"/>
+                            <Image x:Name="ReferenceImageImage" Source="{Binding CurrentNamedPoint.ImageRefPath}" MinWidth="120" MinHeight="120" MaxWidth="250" MaxHeight="250" Margin="0,0,0,10" Height="Auto" Panel.ZIndex="1"/>
                         </DockPanel>
                     </DockPanel>
                 </DockPanel>
@@ -74,10 +74,11 @@
                     <DockPanel>
                         <Button IsEnabled="{Binding IsDataLoaded}" x:Name="PreviousImageButton" DockPanel.Dock="Left" Content="Previous Image" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Bottom" Height="20" Click="PreviousImageButton_Click"/>
                         <Button IsEnabled="{Binding IsDataLoaded}" x:Name="NextImageButton" DockPanel.Dock="Right" Content="Next Image" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="85" Click="NextImageButton_Click"/>
-                        <ComboBox Margin="5,0,5,0" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-                            <ComboBoxItem>Point Name 1</ComboBoxItem>
-                            <ComboBoxItem>Point Name 2</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox x:Name="NamedPointsComboBox" Margin="5,0,5,0" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" 
+                                  ItemsSource="{Binding CurrentIndexedImage.PointsToMark}" 
+                                  DisplayMemberPath="Name" 
+                                  SelectedValuePath="Name" SelectionChanged="ComboBox_SelectionChanged"
+                                  SelectedItem="{Binding CurrentNamedPoint}"/>
                     </DockPanel>
                     <Button Content="Clear All Points" HorizontalAlignment="Center" Margin="0,10,0,20" VerticalAlignment="Center" Background="IndianRed" Height="20"/>
                 </StackPanel>
@@ -98,7 +99,7 @@
                     </Label>
                     <Label x:Name="CurrentImageLabel" Background="LightGray" Content="{Binding CurrentIndexedImage.Image}" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" HorizontalAlignment="Stretch"/>
                 </DockPanel>
-                <Canvas x:Name="MainCanvas" Margin="0,0,0,0" MouseMove="MainCanvas_MouseMove" Cursor="Cross">
+                <Canvas x:Name="MainCanvas" Margin="0,0,0,0" MouseMove="MainCanvas_MouseMove" MouseLeftButtonDown="MainCavas_OnClickLeftDown"  Cursor="Cross">
                     <Canvas.Background>
                         <ImageBrush ImageSource="{Binding CurrentIndexedImage.Image}"/>
                     </Canvas.Background>

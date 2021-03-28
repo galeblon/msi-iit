@@ -74,12 +74,18 @@ namespace MsiImageIndexer.model
         private IndexedImage currentIndexedImage = null;
         public IndexedImage CurrentIndexedImage 
         {
-            get { return currentIndexedImage; }
+            get 
+            { 
+                return currentIndexedImage;
+            }
             set 
             {
                 currentIndexedImage = value;
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
+                UpdateProperty("CurrentNamedPoint");
+                UpdateProperty("CurrentNamedPointIndex");
+                UpdateProperty("PointsToMark");
             }
         }
         public int CurrentIndexedImageIndex 
@@ -90,6 +96,31 @@ namespace MsiImageIndexer.model
                 currentIndexedImage = indexedImages[value];
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
+                UpdateProperty("CurrentNamedPoint");
+                UpdateProperty("CurrentNamedPointIndex");
+                UpdateProperty("PointsToMark");
+            }
+        }
+
+        private NamedPoint currentNamedPoint = null;
+        public NamedPoint CurrentNamedPoint 
+        {
+            get { return currentNamedPoint; }
+            set 
+            {
+                currentNamedPoint = value;
+                UpdateProperty("CurrentNamedPoint");
+                UpdateProperty("CurrentNamedPointIndex");
+            }
+        }
+        public int CurrentNamedPointIndex
+        {  
+            get { return currentIndexedImage != null ? currentIndexedImage.PointsToMark.IndexOf(currentNamedPoint) : 0; }
+            set 
+            {
+                currentNamedPoint = currentIndexedImage.PointsToMark[value];
+                UpdateProperty("CurrentNamedPoint");
+                UpdateProperty("CurrentNamedPointIndex");
             }
         }
 

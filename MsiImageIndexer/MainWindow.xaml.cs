@@ -3,6 +3,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using MsiImageIndexer.model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -84,11 +85,12 @@ namespace MsiImageIndexer
                             {
                                 Image = new Uri(f.ToString()), 
                                 MarkedPoints = new List<MarkedPoint>(), 
-                                PointsToMark = this.viewModel.PointCollection.Points.ToList() 
+                                PointsToMark = new ObservableCollection<NamedPoint>(this.viewModel.PointCollection.Points.ToList()) 
                             })
                             .ToList();
                         this.viewModel.IndexedImages = imagesToIndex;
                         this.viewModel.CurrentIndexedImage = imagesToIndex.FirstOrDefault();
+                        NamedPointsComboBox.SelectedIndex = 0;
                         MessageBox.Show($"Loaded {imagesToIndex.Count()} images to index", "Data load succes");
                     }
                     catch(Exception ex)
@@ -106,9 +108,16 @@ namespace MsiImageIndexer
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
             // TODO recalculate according to scale of real image
-
             this.viewModel.X = e.GetPosition(MainCanvas).X;
             this.viewModel.Y = e.GetPosition(MainCanvas).Y;
+        }
+
+        private void MainCavas_OnClickLeftDown(object sender, MouseEventArgs e) 
+        {
+            // TODO
+            this.viewModel.CurrentIndexedImage.PointsToMark.Remove(this.viewModel.CurrentNamedPoint);
+            this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
+            NamedPointsComboBox.Items.Refresh();
         }
 
         private void PreviousImageButton_Click(object sender, RoutedEventArgs e)
@@ -116,6 +125,8 @@ namespace MsiImageIndexer
             if(this.viewModel.IndexedImages != null & this.viewModel.CurrentIndexedImage != null)
             {
                 this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == 0 ? this.viewModel.IndexedImages.Count - 1 : this.viewModel.CurrentIndexedImageIndex - 1;
+                this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
+                NamedPointsComboBox.Items.Refresh();
             }
         }
 
@@ -124,6 +135,21 @@ namespace MsiImageIndexer
             if (this.viewModel.IndexedImages != null & this.viewModel.CurrentIndexedImage != null)
             {
                 this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == this.viewModel.IndexedImages.Count - 1 ? 0 : this.viewModel.CurrentIndexedImageIndex + 1;
+                this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
+                NamedPointsComboBox.Items.Refresh();
+            }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                NamedPoint newSelectedNamedPoint = (NamedPoint)e.AddedItems[0];
+                this.viewModel.CurrentNamedPoint = newSelectedNamedPoint;
+            }
+            else 
+            {
+                NamedPointsComboBox.SelectedIndex = 0;
             }
         }
     }
