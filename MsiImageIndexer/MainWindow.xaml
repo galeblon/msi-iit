@@ -22,31 +22,17 @@
                 </Menu>
                 <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>
-            <ListBox DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="200">
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
-                <ListBoxItem>Test</ListBoxItem>
-                <ListBoxItem>Test2</ListBoxItem>
+            <ListBox x:Name="MarkedPointsListBox" DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="200"
+                     ItemsSource="{Binding CurrentIndexedImage.MarkedPoints}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Path=NamedPoint.Name}"/>
+                            <Label Content="{Binding Path=X}" ContentStringFormat="X=[{0}]"/>
+                            <Label Content="{Binding Path=Y}" ContentStringFormat="Y=[{0}]"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
             <GroupBox DockPanel.Dock="Right" Width="260">
                 <DockPanel Width="250">

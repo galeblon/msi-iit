@@ -39,6 +39,8 @@ namespace MsiImageIndexer.model
         private double y = 0;
         public double X 
         {
+
+            get { return x; }
             set 
             {
                 x = value;
@@ -47,6 +49,7 @@ namespace MsiImageIndexer.model
         }
         public double Y
         {
+            get { return y; }
             set
             {
                 y = value;

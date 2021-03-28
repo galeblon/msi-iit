@@ -4,9 +4,9 @@ namespace MsiImageIndexer.model
 {
     public class MarkedPoint
     {
-        double X { get; set; }
-        double Y { get; set; }
-        Colors Colour { get; set; }
-        NamedPoint NamedPoint {get; set;}
+        public double X { get; set; }
+        public double Y { get; set; }
+        public Color Colour { get; set; }
+        public NamedPoint NamedPoint {get; set;}
     }
 }

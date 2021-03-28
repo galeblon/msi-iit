@@ -114,10 +114,19 @@ namespace MsiImageIndexer
 
         private void MainCavas_OnClickLeftDown(object sender, MouseEventArgs e) 
         {
-            // TODO
+            // TODO unique colour
+            MarkedPoint markedPoint = new MarkedPoint {  };
+            this.viewModel.CurrentIndexedImage.MarkedPoints.Add(new MarkedPoint 
+            {
+                NamedPoint = this.viewModel.CurrentNamedPoint,
+                Colour = Colors.Red,
+                X = this.viewModel.X,
+                Y = this.viewModel.Y
+            });
             this.viewModel.CurrentIndexedImage.PointsToMark.Remove(this.viewModel.CurrentNamedPoint);
             this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
             NamedPointsComboBox.Items.Refresh();
+            MarkedPointsListBox.Items.Refresh();
         }
 
         private void PreviousImageButton_Click(object sender, RoutedEventArgs e)
@@ -127,6 +136,7 @@ namespace MsiImageIndexer
                 this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == 0 ? this.viewModel.IndexedImages.Count - 1 : this.viewModel.CurrentIndexedImageIndex - 1;
                 this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
                 NamedPointsComboBox.Items.Refresh();
+                MarkedPointsListBox.Items.Refresh();
             }
         }
 
@@ -137,6 +147,7 @@ namespace MsiImageIndexer
                 this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == this.viewModel.IndexedImages.Count - 1 ? 0 : this.viewModel.CurrentIndexedImageIndex + 1;
                 this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
                 NamedPointsComboBox.Items.Refresh();
+                MarkedPointsListBox.Items.Refresh();
             }
         }
 
