@@ -27,7 +27,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <DockPanel Width="180">
-                            <Button DockPanel.Dock="Right" HorizontalAlignment="Center" Height="30" Click="MarkedPoindClear_Click">Clear</Button>
+                            <Button DockPanel.Dock="Right" HorizontalAlignment="Center" Height="30" Click="MarkedPointClear_Click">Clear</Button>
                             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <TextBlock Text="{Binding Path=NamedPoint.Name}"/>
                                 <Label Content="{Binding Path=X}" ContentStringFormat="X=[{0:0.##}]"/>

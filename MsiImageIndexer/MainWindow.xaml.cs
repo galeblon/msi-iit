@@ -167,7 +167,7 @@ namespace MsiImageIndexer
             }
         }
 
-        private void MarkedPoindClear_Click(object sender, RoutedEventArgs e)
+        private void MarkedPointClear_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             MarkedPoint markedPoint = button.DataContext as MarkedPoint;
