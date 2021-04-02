@@ -65,13 +65,11 @@ namespace MsiImageIndexer.model
         public double XScale
         {
             get { return x_scale; }
-            set { x_scale = value; }
         }
 
         public double YScale
         {
             get { return y_scale; }
-            set { y_scale = value; }
         }
 
 

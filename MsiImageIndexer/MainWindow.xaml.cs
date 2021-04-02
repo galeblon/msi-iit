@@ -199,6 +199,19 @@ namespace MsiImageIndexer
                     Margin = new Thickness(x, y, 0, 0)
                 };
                 canvas.Children.Add(pt);
+
+                // Text
+                if(MarkedPointsListBox.SelectedItem == mp) 
+                {
+                    TextBlock textBlock = new TextBlock()
+                    {
+                        Text = mp.NamedPoint.Name,
+                        Foreground = new SolidColorBrush(mp.Colour),
+                        FontSize = 16,
+                        Margin = new Thickness(x, y-18, 0, 0)
+                    };
+                    canvas.Children.Add(textBlock);
+                }
             }
         }
 
@@ -212,6 +225,21 @@ namespace MsiImageIndexer
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             DrawPointsMainCanvas(MainCanvas);
+        }
+
+        private void MarkedPointsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DrawPointsMainCanvas(MainCanvas);
+        }
+
+        private void ClearAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach(MarkedPoint mp in this.viewModel.CurrentIndexedImage.MarkedPoints) 
+            {
+                this.viewModel.CurrentIndexedImage.PointsToMark.Add(mp.NamedPoint);
+            }
+            this.viewModel.CurrentIndexedImage.MarkedPoints.Clear();
+            RefreshAll();
         }
     }
 }

@@ -23,7 +23,7 @@
                 <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>
             <ListBox x:Name="MarkedPointsListBox" DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="200"
-                     ItemsSource="{Binding CurrentIndexedImage.MarkedPoints}">
+                     ItemsSource="{Binding CurrentIndexedImage.MarkedPoints}" SelectionChanged="MarkedPointsListBox_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <DockPanel Width="180">
@@ -69,7 +69,7 @@
                                   SelectedValuePath="Name" SelectionChanged="ComboBox_SelectionChanged"
                                   SelectedItem="{Binding CurrentNamedPoint}"/>
                     </DockPanel>
-                    <Button Content="Clear All Points" HorizontalAlignment="Center" Margin="0,10,0,20" VerticalAlignment="Center" Background="IndianRed" Height="20"/>
+                    <Button x:Name="ClearAllButton" Content="Clear All Points" Click="ClearAllButton_Click" HorizontalAlignment="Center" Margin="0,10,0,20" VerticalAlignment="Center" Background="IndianRed" Height="20"/>
                 </StackPanel>
             </GroupBox>
             <DockPanel>
