@@ -107,6 +107,8 @@ namespace MsiImageIndexer
 
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
+            if (this.viewModel.CurrentIndexedImage == null)
+                return;
             double canvas_width = MainCanvas.ActualWidth;
             double canvas_height = MainCanvas.ActualHeight;
             double image_width = this.viewModel.XScale;
@@ -114,6 +116,35 @@ namespace MsiImageIndexer
 
             this.viewModel.X = e.GetPosition(MainCanvas).X/canvas_width*image_width;
             this.viewModel.Y = e.GetPosition(MainCanvas).Y/canvas_height*image_height;
+
+
+            ImageBrush imageBrush = new ImageBrush()
+            {
+                ImageSource = new BitmapImage(this.viewModel.CurrentIndexedImage.Image),
+            };
+
+            //TODO bind to zoom level
+            double ScalePercentage = 1.0;
+            TransformGroup tg = new TransformGroup
+            {
+                Children =
+                {
+                    new ScaleTransform()
+                    {
+                        CenterX = 0,
+                        CenterY = 0,
+                        ScaleX = this.viewModel.XScale/PrecisionCanvas.ActualWidth * ScalePercentage,
+                        ScaleY = this.viewModel.YScale/PrecisionCanvas.ActualHeight * ScalePercentage,
+                    },
+                    new TranslateTransform()
+                    {
+                        X = PrecisionCanvas.ActualWidth/2-this.viewModel.X * ScalePercentage,
+                        Y = PrecisionCanvas.ActualHeight/2-this.viewModel.Y * ScalePercentage
+                    }
+                }
+            };
+            imageBrush.Transform = tg;
+            PrecisionCanvas.Background = imageBrush;
         }
 
         private void MainCavas_OnClickLeftDown(object sender, MouseEventArgs e) 
