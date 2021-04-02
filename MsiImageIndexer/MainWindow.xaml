@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MsiImageIndexer" xmlns:converters="clr-namespace:MsiImageIndexer.converters"  xmlns:model="clr-namespace:MsiImageIndexer.model" d:DataContext="{d:DesignInstance Type=model:ViewModel}"
         mc:Ignorable="d"
-        Title="MSI - Image Indexing Tool" Height="450" Width="800" Foreground="#FFBB4E4E" BorderBrush="#FF993939" MinWidth="1024" MinHeight="640">
+        Title="MSI - Image Indexing Tool" Height="450" Width="800" Foreground="#FFBB4E4E" BorderBrush="#FF993939" MinWidth="1024" MinHeight="640" SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <ResourceDictionary>
             <converters:IndexConverter x:Key="IndexConverter"/>
@@ -26,11 +26,14 @@
                      ItemsSource="{Binding CurrentIndexedImage.MarkedPoints}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding Path=NamedPoint.Name}"/>
-                            <Label Content="{Binding Path=X}" ContentStringFormat="X=[{0}]"/>
-                            <Label Content="{Binding Path=Y}" ContentStringFormat="Y=[{0}]"/>
-                        </StackPanel>
+                        <DockPanel Width="180">
+                            <Button DockPanel.Dock="Right" HorizontalAlignment="Center" Height="30" Click="MarkedPoindClear_Click">Clear</Button>
+                            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <TextBlock Text="{Binding Path=NamedPoint.Name}"/>
+                                <Label Content="{Binding Path=X}" ContentStringFormat="X=[{0:0.##}]"/>
+                                <Label Content="{Binding Path=Y}" ContentStringFormat="Y=[{0:0.##}]"/>
+                            </StackPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Text;
 
 namespace MsiImageIndexer.model
@@ -57,9 +59,25 @@ namespace MsiImageIndexer.model
             }
         }
 
+        private double x_scale = 0;
+        private double y_scale = 0;
+
+        public double XScale
+        {
+            get { return x_scale; }
+            set { x_scale = value; }
+        }
+
+        public double YScale
+        {
+            get { return y_scale; }
+            set { y_scale = value; }
+        }
+
+
         public string CurrentPositionLabel 
         {
-            get { return $"X = [{x, 10}]\tY = [{y, 10}]"; }
+            get { return $"X = [{x, 10:0.##}]\tY = [{y, 10:0.##}]"; }
         }
 
         private List<IndexedImage> indexedImages = new List<IndexedImage>();
@@ -84,6 +102,9 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = value;
+                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.AbsolutePath), false, false);
+                x_scale = imageInfo.PhysicalDimension.Width;
+                y_scale = imageInfo.PhysicalDimension.Height;
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
                 UpdateProperty("CurrentNamedPoint");

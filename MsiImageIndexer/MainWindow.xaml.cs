@@ -107,14 +107,20 @@ namespace MsiImageIndexer
 
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            // TODO recalculate according to scale of real image
-            this.viewModel.X = e.GetPosition(MainCanvas).X;
-            this.viewModel.Y = e.GetPosition(MainCanvas).Y;
+            double canvas_width = MainCanvas.ActualWidth;
+            double canvas_height = MainCanvas.ActualHeight;
+            double image_width = this.viewModel.XScale;
+            double image_height = this.viewModel.YScale;
+
+            this.viewModel.X = e.GetPosition(MainCanvas).X/canvas_width*image_width;
+            this.viewModel.Y = e.GetPosition(MainCanvas).Y/canvas_height*image_height;
         }
 
         private void MainCavas_OnClickLeftDown(object sender, MouseEventArgs e) 
         {
             // TODO unique colour
+            if (this.viewModel.CurrentNamedPoint == null)
+                return;
             MarkedPoint markedPoint = new MarkedPoint {  };
             this.viewModel.CurrentIndexedImage.MarkedPoints.Add(new MarkedPoint 
             {
@@ -125,8 +131,7 @@ namespace MsiImageIndexer
             });
             this.viewModel.CurrentIndexedImage.PointsToMark.Remove(this.viewModel.CurrentNamedPoint);
             this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
-            NamedPointsComboBox.Items.Refresh();
-            MarkedPointsListBox.Items.Refresh();
+            RefreshAll();
         }
 
         private void PreviousImageButton_Click(object sender, RoutedEventArgs e)
@@ -135,8 +140,7 @@ namespace MsiImageIndexer
             {
                 this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == 0 ? this.viewModel.IndexedImages.Count - 1 : this.viewModel.CurrentIndexedImageIndex - 1;
                 this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
-                NamedPointsComboBox.Items.Refresh();
-                MarkedPointsListBox.Items.Refresh();
+                RefreshAll();
             }
         }
 
@@ -146,8 +150,7 @@ namespace MsiImageIndexer
             {
                 this.viewModel.CurrentIndexedImageIndex = this.viewModel.CurrentIndexedImageIndex == this.viewModel.IndexedImages.Count - 1 ? 0 : this.viewModel.CurrentIndexedImageIndex + 1;
                 this.viewModel.CurrentNamedPoint = this.viewModel.CurrentIndexedImage.PointsToMark.FirstOrDefault();
-                NamedPointsComboBox.Items.Refresh();
-                MarkedPointsListBox.Items.Refresh();
+                RefreshAll();
             }
         }
 
@@ -162,6 +165,53 @@ namespace MsiImageIndexer
             {
                 NamedPointsComboBox.SelectedIndex = 0;
             }
+        }
+
+        private void MarkedPoindClear_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            MarkedPoint markedPoint = button.DataContext as MarkedPoint;
+            this.viewModel.CurrentIndexedImage.PointsToMark.Add(markedPoint.NamedPoint);
+            this.viewModel.CurrentIndexedImage.MarkedPoints.Remove(markedPoint);
+            RefreshAll();
+        }
+
+        private void DrawPointsMainCanvas(Canvas canvas) 
+        {
+            canvas.Children.Clear();
+            if (this.viewModel.CurrentIndexedImage == null)
+                return;
+            double canvas_width = MainCanvas.ActualWidth;
+            double canvas_height = MainCanvas.ActualHeight;
+            double image_width = this.viewModel.XScale;
+            double image_height = this.viewModel.YScale;
+            foreach (MarkedPoint mp in this.viewModel.CurrentIndexedImage.MarkedPoints) 
+            {
+                double x = mp.X * canvas_width / image_width;
+                double y = mp.Y * canvas_height / image_height;
+                Ellipse pt = new Ellipse()
+                {
+                    Stroke = new SolidColorBrush(mp.Colour),
+                    Width = 4,
+                    Height = 4,
+                    StrokeThickness = 4,
+                    Fill = new SolidColorBrush(mp.Colour),
+                    Margin = new Thickness(x, y, 0, 0)
+                };
+                canvas.Children.Add(pt);
+            }
+        }
+
+        private void RefreshAll() 
+        {
+            NamedPointsComboBox.Items.Refresh();
+            MarkedPointsListBox.Items.Refresh();
+            DrawPointsMainCanvas(MainCanvas);
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            DrawPointsMainCanvas(MainCanvas);
         }
     }
 }
