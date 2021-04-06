@@ -6,17 +6,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml.Serialization;
 using PointCollection = MsiImageIndexer.model.PointCollection;
@@ -104,27 +98,38 @@ namespace MsiImageIndexer
                 }
             }
         }
-
-        private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
+        
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.viewModel.CurrentIndexedImage == null)
-                return;
-            double canvas_width = MainCanvas.ActualWidth;
-            double canvas_height = MainCanvas.ActualHeight;
-            double image_width = this.viewModel.XScale;
-            double image_height = this.viewModel.YScale;
+            var fileDialog = new SaveFileDialog();
+            fileDialog.Title = "Select output file path";
+            fileDialog.Filter = "xml file (*.xml)|*.xml|csv file (*.csv)|*.csv";
+            fileDialog.FilterIndex = 1;
+            fileDialog.InitialDirectory = Environment.CurrentDirectory;
 
-            this.viewModel.X = e.GetPosition(MainCanvas).X/canvas_width*image_width;
-            this.viewModel.Y = e.GetPosition(MainCanvas).Y/canvas_height*image_height;
-
-
-            ImageBrush imageBrush = new ImageBrush()
+            bool? res = fileDialog.ShowDialog();
+            if(res.HasValue && res.Value) 
             {
-                ImageSource = new BitmapImage(this.viewModel.CurrentIndexedImage.Image),
-            };
+                string fileName = fileDialog.FileName;
+                int filterIndex = fileDialog.FilterIndex;
+                // index is 1 = xml, index is 2 = csv
+                // TODO
+            }
+        }
 
-            //TODO bind to zoom level
-            double ScalePercentage = 1.0;
+        private void SaveAsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PrecisionCanvas_Draw() 
+        {
+            ImageBrush imageBrush = this.viewModel.PrecisionImageBrush;
+
+            if (imageBrush == null)
+                return;
+
+            double ScalePercentage = this.viewModel.ZoomLevel / 100.0;
             TransformGroup tg = new TransformGroup
             {
                 Children =
@@ -145,6 +150,21 @@ namespace MsiImageIndexer
             };
             imageBrush.Transform = tg;
             PrecisionCanvas.Background = imageBrush;
+        }
+
+        private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (this.viewModel.CurrentIndexedImage == null)
+                return;
+            double canvas_width = MainCanvas.ActualWidth;
+            double canvas_height = MainCanvas.ActualHeight;
+            double image_width = this.viewModel.XScale;
+            double image_height = this.viewModel.YScale;
+
+            this.viewModel.X = e.GetPosition(MainCanvas).X/canvas_width*image_width;
+            this.viewModel.Y = e.GetPosition(MainCanvas).Y/canvas_height*image_height;
+
+            PrecisionCanvas_Draw();
         }
 
         private void MainCavas_OnClickLeftDown(object sender, MouseEventArgs e) 
@@ -231,7 +251,6 @@ namespace MsiImageIndexer
                 };
                 canvas.Children.Add(pt);
 
-                // Text
                 if(MarkedPointsListBox.SelectedItem == mp) 
                 {
                     TextBlock textBlock = new TextBlock()
@@ -251,6 +270,7 @@ namespace MsiImageIndexer
             NamedPointsComboBox.Items.Refresh();
             MarkedPointsListBox.Items.Refresh();
             DrawPointsMainCanvas(MainCanvas);
+            PrecisionCanvas_Draw();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -271,6 +291,18 @@ namespace MsiImageIndexer
             }
             this.viewModel.CurrentIndexedImage.MarkedPoints.Clear();
             RefreshAll();
+        }
+
+        private void ZoomInButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.viewModel.ZoomLevel += 25;
+            PrecisionCanvas_Draw();
+        }
+
+        private void ZoomOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.viewModel.ZoomLevel -= 25;
+            PrecisionCanvas_Draw();
         }
     }
 }

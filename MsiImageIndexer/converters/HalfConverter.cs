@@ -6,17 +6,17 @@ using System.Windows.Data;
 
 namespace MsiImageIndexer.converters
 {
-    public class MarkedPointsConverter : IValueConverter
+    public class HalfConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (int)value + 1;
+            return (double)value/2.0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (int)value - 1;
+            return (double)value*2.0;
         }
     }
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Text;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MsiImageIndexer.model
 {
@@ -36,7 +37,6 @@ namespace MsiImageIndexer.model
         }
 
 
-        // temporary
         private double x = 0;
         private double y = 0;
         public double X 
@@ -103,11 +103,16 @@ namespace MsiImageIndexer.model
                 var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.AbsolutePath), false, false);
                 x_scale = imageInfo.PhysicalDimension.Width;
                 y_scale = imageInfo.PhysicalDimension.Height;
+                precisionImageBrush = new ImageBrush()
+                {
+                    ImageSource = new BitmapImage(value.Image)
+                };
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
                 UpdateProperty("CurrentNamedPoint");
                 UpdateProperty("CurrentNamedPointIndex");
                 UpdateProperty("PointsToMark");
+                UpdateProperty("PrecisionImageBrush");
             }
         }
         public int CurrentIndexedImageIndex 
@@ -116,11 +121,16 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = indexedImages[value];
+                precisionImageBrush = new ImageBrush()
+                {
+                    ImageSource = new BitmapImage(currentIndexedImage.Image)
+                };
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
                 UpdateProperty("CurrentNamedPoint");
                 UpdateProperty("CurrentNamedPointIndex");
                 UpdateProperty("PointsToMark");
+                UpdateProperty("PrecisionImageBrush");
             }
         }
 
@@ -143,6 +153,30 @@ namespace MsiImageIndexer.model
                 currentNamedPoint = currentIndexedImage.PointsToMark[value];
                 UpdateProperty("CurrentNamedPoint");
                 UpdateProperty("CurrentNamedPointIndex");
+            }
+        }
+
+        private readonly int minimumZoomLevel = 50;
+        private readonly int maximumZoomLevel = 1000;
+        private int zoomLevel = 100;
+        public int ZoomLevel 
+        {
+            get { return zoomLevel; }
+            set 
+            {
+                zoomLevel = Math.Min(Math.Max(value, minimumZoomLevel), maximumZoomLevel);
+                UpdateProperty("ZoomLevel");
+            }
+        }
+
+        private ImageBrush precisionImageBrush = null;
+        public ImageBrush PrecisionImageBrush 
+        {
+            get { return precisionImageBrush; }
+            set 
+            {
+                precisionImageBrush = value;
+                UpdateProperty("PrecisionImageBrush");
             }
         }
 

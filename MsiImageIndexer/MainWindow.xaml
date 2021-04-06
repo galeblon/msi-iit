@@ -9,16 +9,33 @@
     <Window.Resources>
         <ResourceDictionary>
             <converters:IndexConverter x:Key="IndexConverter"/>
+            <converters:HalfConverter x:Key="HalfConverter"/>
+            <RoutedCommand x:Key="ZoomInCommand"/>
+            <RoutedCommand x:Key="ZoomOutCommand"/>
+            <RoutedCommand x:Key="NextImageCommand"/>
+            <RoutedCommand x:Key="PreviousImageCommand"/>
         </ResourceDictionary>
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource ZoomInCommand}" Executed="ZoomOutButton_Click"/>
+        <CommandBinding Command="{StaticResource ZoomOutCommand}" Executed="ZoomInButton_Click"/>
+        <CommandBinding Command="{StaticResource NextImageCommand}" Executed="NextImageButton_Click"/>
+        <CommandBinding Command="{StaticResource PreviousImageCommand}" Executed="PreviousImageButton_Click"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="OemMinus" Modifiers="Ctrl" Command="{StaticResource ZoomInCommand}"/>
+        <KeyBinding Key="OemPlus" Modifiers="Ctrl" Command="{StaticResource ZoomOutCommand}"/>
+        <KeyBinding Key="Right" Command="{StaticResource NextImageCommand}"/>
+        <KeyBinding Key="Left" Command="{StaticResource PreviousImageCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                 <Menu Margin="0,0,0,0" Height="20" VerticalAlignment="Top">
                     <MenuItem x:Name="LoadConfigButton" Header="Load _Configuration" Click="LoadConfigButton_Click"/>
                     <MenuItem x:Name="LoadDataButton" Header="Load _Input" IsEnabled="{Binding IsConfigLoaded}" Click="LoadDataButton_Click"/>
-                    <MenuItem x:Name="SaveButton" Header="_Save" IsEnabled="{Binding IsDataLoaded}"/>
-                    <MenuItem x:Name="SaveAsButton" Header="Save _As" IsEnabled="{Binding IsDataLoaded}"/>
+                    <MenuItem x:Name="SaveButton" Header="_Save" IsEnabled="{Binding IsDataLoaded}" Click="SaveButton_Click"/>
+                    <MenuItem x:Name="SaveAsButton" Header="Save _As" IsEnabled="{Binding IsDataLoaded}" Click="SaveAsButton_Click"/>
                 </Menu>
                 <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>
@@ -41,12 +58,25 @@
                 <DockPanel Width="250">
                     <DockPanel DockPanel.Dock="Top" Width="250" Height="280">
                         <Label x:Name="CurrentPositionLabel" DockPanel.Dock="Top" Background="LightGray" Content="{Binding CurrentPositionLabel}" Margin="0,0,0,0" Height="30" Width="250"/>
-                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button Background="IndianRed" Content="-" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBox Text="100%" TextWrapping="Wrap" Width="120"/>
-                            <Button Background="PaleGreen" Content="+" Width="30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Width="180">
+                            <Button x:Name="ZoomOutButton" Background="IndianRed" Content="-" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Click="ZoomOutButton_Click"/>
+                            <Label ContentStringFormat=" {0}% " Content="{Binding ZoomLevel}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="120"/>
+                            <Button x:Name="ZoomInButton" Background="PaleGreen" Content="+" Width="30" HorizontalAlignment="Right" VerticalAlignment="Center" Click="ZoomInButton_Click"/>
                         </StackPanel>
-                        <Canvas x:Name="PrecisionCanvas" Margin="0,0,0,0" Background="Beige" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Panel.ZIndex="3"/>
+                        <Canvas x:Name="PrecisionCanvas" Margin="0,0,0,0" Background="Beige" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Panel.ZIndex="3">
+                            <Line 
+                                X1="0"
+                                X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                                Y1="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                StrokeThickness="2" Stroke="Black" StrokeDashArray="1"/>
+                            <Line 
+                                Y1="0"
+                                Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                                X1="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                StrokeThickness="2" Stroke="Black" StrokeDashArray="1"/>
+                        </Canvas>
                     </DockPanel>
                     <DockPanel DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <DockPanel Margin="0,10,0,0">
