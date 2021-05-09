@@ -40,7 +40,7 @@
                 <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>
             <ListBox x:Name="MarkedPointsListBox" DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="200"
-                     ItemsSource="{Binding CurrentIndexedImage.MarkedPoints}" SelectionChanged="MarkedPointsListBox_SelectionChanged">
+                     ItemsSource="{Binding CurrentIndexedImage.MarkedPoints}" SelectionChanged="MarkedPointsListBox_SelectionChanged" MouseDoubleClick="MarkedPointsListBox_MouseDoubleClick">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <DockPanel Width="180">

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using MsiImageIndexer.exporters;
+using MsiImageIndexer.inputWindow;
 using MsiImageIndexer.model;
 using System;
 using System.Collections.Generic;
@@ -333,6 +334,23 @@ namespace MsiImageIndexer
         private void MarkedPointsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DrawPointsMainCanvas(MainCanvas);
+        }
+
+        private void MarkedPointsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if(MarkedPointsListBox.SelectedItem != null) 
+            {
+                MarkedPoint item = (MarkedPoint)MarkedPointsListBox.SelectedItem;
+                InputWindow popup = new InputWindow(item.X, item.Y);
+                popup.ShowDialog();
+                
+                if(!InputWindow.cancelled) 
+                {
+                    item.X = InputWindow.xEditVal;
+                    item.Y = InputWindow.yEditVal;
+                    this.RefreshAll();
+                }
+            }
         }
 
         private void ClearAllButton_Click(object sender, RoutedEventArgs e)
