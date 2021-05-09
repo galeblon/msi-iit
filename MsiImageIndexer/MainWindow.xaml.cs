@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using MsiImageIndexer.exporters;
 using MsiImageIndexer.model;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,10 @@ namespace MsiImageIndexer
     public partial class MainWindow : Window
     {
         private ViewModel viewModel;
+
+        private string lastSaveName = null;
+        private int lastSaveFormat = 0;
+
         public MainWindow()
         {
             this.viewModel = new ViewModel();
@@ -101,6 +106,31 @@ namespace MsiImageIndexer
         
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if(lastSaveName == null) 
+            {
+                var fileDialog = new SaveFileDialog();
+                fileDialog.Title = "Select output file path";
+                fileDialog.Filter = "xml file (*.xml)|*.xml|csv file (*.csv)|*.csv";
+                fileDialog.FilterIndex = 1;
+                fileDialog.InitialDirectory = Environment.CurrentDirectory;
+
+                bool? res = fileDialog.ShowDialog();
+                if (res.HasValue && res.Value)
+                {
+                    this.lastSaveName = fileDialog.FileName;
+                    this.lastSaveFormat = fileDialog.FilterIndex;
+                    SaveIndexedImages(this.lastSaveName, this.lastSaveFormat);
+                }
+            } 
+            else 
+            {
+                SaveIndexedImages(this.lastSaveName, this.lastSaveFormat);
+            }
+
+        }
+
+        private void SaveAsButton_Click(object sender, RoutedEventArgs e)
+        {
             var fileDialog = new SaveFileDialog();
             fileDialog.Title = "Select output file path";
             fileDialog.Filter = "xml file (*.xml)|*.xml|csv file (*.csv)|*.csv";
@@ -108,19 +138,41 @@ namespace MsiImageIndexer
             fileDialog.InitialDirectory = Environment.CurrentDirectory;
 
             bool? res = fileDialog.ShowDialog();
-            if(res.HasValue && res.Value) 
+            if (res.HasValue && res.Value)
             {
-                string fileName = fileDialog.FileName;
-                int filterIndex = fileDialog.FilterIndex;
-                // index is 1 = xml, index is 2 = csv
-                // TODO
+                this.lastSaveName = fileDialog.FileName;
+                this.lastSaveFormat = fileDialog.FilterIndex;
+                SaveIndexedImages(this.lastSaveName, this.lastSaveFormat);
             }
         }
 
-        private void SaveAsButton_Click(object sender, RoutedEventArgs e)
+        private void SaveIndexedImages(string filePath, int mode) 
         {
+            try 
+            {
+                IIndexedImagesExporter exporter = null;
+                switch (mode)
+                {
+                    // XML
+                    case 1:
+                        exporter = new IndexedImagesXMLExporter();
+                        break;
+                    // CSV
+                    case 2:
+                        exporter = new IndexedImagesCSVExporter();
+                        break;
+                    default:
+                        throw new NotImplementedException("Export mode not supported");
 
+                }
+                exporter.ExportIndexedImages(filePath, this.viewModel.PointCollection, this.viewModel.IndexedImages);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Image export error");
+            }
         }
+
 
         private void PrecisionCanvas_Draw() 
         {
