@@ -6,6 +6,7 @@ using MsiImageIndexer.model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -222,14 +223,16 @@ namespace MsiImageIndexer
 
         private void MainCavas_OnClickLeftDown(object sender, MouseEventArgs e) 
         {
-            // TODO unique colour
+            Bitmap bitMap = new Bitmap(this.viewModel.CurrentIndexedImage.Image.AbsolutePath);
+            System.Drawing.Color pixelColor = bitMap.GetPixel((int)this.viewModel.X, (int)this.viewModel.Y);
+
             if (this.viewModel.CurrentNamedPoint == null)
                 return;
             MarkedPoint markedPoint = new MarkedPoint {  };
             this.viewModel.CurrentIndexedImage.MarkedPoints.Add(new MarkedPoint 
             {
                 NamedPoint = this.viewModel.CurrentNamedPoint,
-                Colour = Colors.Red,
+                Colour = System.Windows.Media.Color.FromRgb((byte)(255-pixelColor.R), (byte)(255-pixelColor.G), (byte)(255-pixelColor.B)),
                 X = this.viewModel.X,
                 Y = this.viewModel.Y
             });

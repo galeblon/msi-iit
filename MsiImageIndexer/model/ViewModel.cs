@@ -121,6 +121,9 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = indexedImages[value];
+                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.AbsolutePath), false, false);
+                x_scale = imageInfo.PhysicalDimension.Width;
+                y_scale = imageInfo.PhysicalDimension.Height;
                 precisionImageBrush = new ImageBrush()
                 {
                     ImageSource = new BitmapImage(currentIndexedImage.Image)
