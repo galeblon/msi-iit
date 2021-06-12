@@ -56,6 +56,8 @@ namespace MsiImageIndexer
                     try
                     {
                         this.viewModel.PointCollection = (PointCollection)serializer.Deserialize(reader);
+                        foreach (NamedPoint pt in this.viewModel.PointCollection.Points)
+                            pt.ImageRefPath = $"{System.IO.Path.GetDirectoryName(fileName)}/{pt.ImageRefPath}";
                         this.viewModel.ConfigNameLabel = fileName;
                     } 
                     catch (Exception ex) 
