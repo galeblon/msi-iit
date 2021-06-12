@@ -65,12 +65,28 @@
                         </StackPanel>
                         <Canvas x:Name="PrecisionCanvas" Margin="0,0,0,0" Background="Beige" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Panel.ZIndex="3">
                             <Line 
+                                Opacity="0.5"
+                                X1="0"
+                                X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                                Y1="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                StrokeThickness="2" Stroke="White"/>
+                            <Line 
+                                Opacity="0.5"
                                 X1="0"
                                 X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
                                 Y1="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
                                 Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
                                 StrokeThickness="2" Stroke="Black" StrokeDashArray="1"/>
                             <Line 
+                                Opacity="0.5"
+                                Y1="0"
+                                Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
+                                X1="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                X2="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
+                                StrokeThickness="2" Stroke="White"/>
+                            <Line 
+                                Opacity="0.5"
                                 Y1="0"
                                 Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}}"
                                 X1="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Converter={StaticResource HalfConverter}}"   
