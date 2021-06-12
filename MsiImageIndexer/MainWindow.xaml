@@ -36,6 +36,8 @@
                     <MenuItem x:Name="LoadDataButton" Header="Load _Input" IsEnabled="{Binding IsConfigLoaded}" Click="LoadDataButton_Click"/>
                     <MenuItem x:Name="SaveButton" Header="_Save" IsEnabled="{Binding IsDataLoaded}" Click="SaveButton_Click"/>
                     <MenuItem x:Name="SaveAsButton" Header="Save _As" IsEnabled="{Binding IsDataLoaded}" Click="SaveAsButton_Click"/>
+                    <MenuItem x:Name="ExportSessionButton" Header="_Export Session" IsEnabled="{Binding IsDataLoaded}" Click="ExportSessionButton_Click"/>
+                    <MenuItem x:Name="ImportSessionButton" Header="Im_port Session" Click="ImportSessionButton_Click"/>
                 </Menu>
                 <Label x:Name="ConfigurationNameLabel" Background="#FFBDBDBD" Content="{Binding ConfigNameLabel}" ContentStringFormat="Configuration loaded: {0}" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Top" Height="30"/>
             </StackPanel>

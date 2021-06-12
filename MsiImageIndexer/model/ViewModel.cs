@@ -8,11 +8,13 @@ using System.Windows.Media.Imaging;
 
 namespace MsiImageIndexer.model
 {
+    [Serializable]
     public class ViewModel : INotifyPropertyChanged
     {
         public bool IsConfigLoaded { get { return pointCollection != null; } }
         public bool IsDataLoaded { get { return indexedImages.Count > 0;  } }
 
+        [NonSerialized]
         private PointCollection pointCollection = null;
         public PointCollection PointCollection
         {
@@ -78,6 +80,7 @@ namespace MsiImageIndexer.model
             get { return $"X = [{x, 10:0.##}]\tY = [{y, 10:0.##}]"; }
         }
 
+        [NonSerialized]
         private List<IndexedImage> indexedImages = new List<IndexedImage>();
         public List<IndexedImage> IndexedImages 
         {
@@ -90,6 +93,7 @@ namespace MsiImageIndexer.model
             }
         }
 
+        [NonSerialized]
         private IndexedImage currentIndexedImage = null;
         public IndexedImage CurrentIndexedImage 
         {
@@ -100,9 +104,12 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = value;
-                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.OriginalString), false, false);
+                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.LocalPath), false, false);
                 x_scale = imageInfo.PhysicalDimension.Width;
                 y_scale = imageInfo.PhysicalDimension.Height;
+                x = 0;
+                y = 0;
+                UpdateProperty("CurrentPositionLabel");
                 precisionImageBrush = new ImageBrush()
                 {
                     ImageSource = new BitmapImage(value.Image)
@@ -121,9 +128,12 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = indexedImages[value];
-                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.OriginalString), false, false);
+                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.LocalPath), false, false);
                 x_scale = imageInfo.PhysicalDimension.Width;
                 y_scale = imageInfo.PhysicalDimension.Height;
+                x = 0;
+                y = 0;
+                UpdateProperty("CurrentPositionLabel");
                 precisionImageBrush = new ImageBrush()
                 {
                     ImageSource = new BitmapImage(currentIndexedImage.Image)
@@ -137,6 +147,7 @@ namespace MsiImageIndexer.model
             }
         }
 
+        [NonSerialized]
         private NamedPoint currentNamedPoint = null;
         public NamedPoint CurrentNamedPoint 
         {
@@ -159,8 +170,11 @@ namespace MsiImageIndexer.model
             }
         }
 
+        [NonSerialized]
         private readonly int minimumZoomLevel = 50;
+        [NonSerialized]
         private readonly int maximumZoomLevel = 1000;
+        [NonSerialized]
         private int zoomLevel = 100;
         public int ZoomLevel 
         {
@@ -172,6 +186,7 @@ namespace MsiImageIndexer.model
             }
         }
 
+        [NonSerialized]
         private ImageBrush precisionImageBrush = null;
         public ImageBrush PrecisionImageBrush 
         {

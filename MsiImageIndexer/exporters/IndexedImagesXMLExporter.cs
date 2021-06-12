@@ -15,7 +15,7 @@ namespace MsiImageIndexer.exporters
             foreach (IndexedImage indexedImage in indexedImages)
             {
                 var imageNode = rootNode.AppendChild(doc.CreateElement("image"));
-                imageNode.AppendChild(doc.CreateElement("name")).AppendChild(doc.CreateTextNode(indexedImage.Image.OriginalString));
+                imageNode.AppendChild(doc.CreateElement("name")).AppendChild(doc.CreateTextNode(indexedImage.Image.LocalPath));
                 foreach(NamedPoint point in points.Points) 
                 {
                     var pointNode = imageNode.AppendChild(doc.CreateElement(point.Name.Replace(' ', '_')));

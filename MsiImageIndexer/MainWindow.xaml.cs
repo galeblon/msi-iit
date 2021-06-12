@@ -150,6 +150,63 @@ namespace MsiImageIndexer
             }
         }
 
+        private void ExportSessionButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new SaveFileDialog();
+            fileDialog.Title = "Select output session path";
+            fileDialog.InitialDirectory = Environment.CurrentDirectory;
+
+            bool? res = fileDialog.ShowDialog();
+            if (res.HasValue && res.Value)
+            {
+                FileStream stream = File.Create(fileDialog.FileName);
+                var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                formatter.Serialize(stream, new object[] { this.viewModel.IndexedImages, this.viewModel.CurrentIndexedImageIndex, this.viewModel.ConfigNameLabel});
+            }
+        }
+
+        private void ImportSessionButton_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new OpenFileDialog();
+            fileDialog.Title = "Select a session file";
+            fileDialog.InitialDirectory = Environment.CurrentDirectory;
+
+            bool? res = fileDialog.ShowDialog();
+            if (res.HasValue && res.Value)
+            {
+                FileStream stream = File.OpenRead(fileDialog.FileName);
+                var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                var deserialization = (object[])formatter.Deserialize(stream);
+                List<IndexedImage> indexedImages = (List<IndexedImage>)deserialization[0];
+                int index = (int)deserialization[1];
+                string configName = (string)deserialization[2];
+
+                XmlSerializer serializer = new XmlSerializer(typeof(PointCollection));
+
+                using (StreamReader reader = new StreamReader(configName))
+                {
+                    try
+                    {
+                        this.viewModel.PointCollection = (PointCollection)serializer.Deserialize(reader);
+                        foreach (NamedPoint pt in this.viewModel.PointCollection.Points)
+                            pt.ImageRefPath = $"{System.IO.Path.GetDirectoryName(configName)}/{pt.ImageRefPath}";
+                        this.viewModel.ConfigNameLabel = configName;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Config load error");
+                    }
+                }
+                this.viewModel.IndexedImages = indexedImages;
+                foreach (IndexedImage img in this.viewModel.IndexedImages)
+                    foreach (MarkedPoint mp in img.MarkedPoints)
+                        mp.Colour = System.Windows.Media.Color.FromRgb(255, 0, 0);
+                this.viewModel.CurrentIndexedImageIndex = index;
+                this.viewModel.ConfigNameLabel = configName;
+                this.RefreshAll();
+            }
+        }
+
         private void SaveIndexedImages(string filePath, int mode) 
         {
             try 
@@ -228,7 +285,7 @@ namespace MsiImageIndexer
             if (this.viewModel.CurrentNamedPoint == null)
                 return;
 
-            Bitmap bitMap = new Bitmap(this.viewModel.CurrentIndexedImage.Image.OriginalString);
+            Bitmap bitMap = new Bitmap(this.viewModel.CurrentIndexedImage.Image.LocalPath);
             System.Drawing.Color pixelColor = bitMap.GetPixel((int)this.viewModel.X, (int)this.viewModel.Y);
 
             MarkedPoint markedPoint = new MarkedPoint {  };

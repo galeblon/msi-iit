@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 
 namespace MsiImageIndexer.model
 {
+    [Serializable]
     public class NamedPoint
     {
         [XmlElement("name")]

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace MsiImageIndexer.model
 {
+    [Serializable]
     public class IndexedImage
     {
         public Uri Image { get; set; }
