@@ -100,7 +100,7 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = value;
-                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.AbsolutePath), false, false);
+                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.OriginalString), false, false);
                 x_scale = imageInfo.PhysicalDimension.Width;
                 y_scale = imageInfo.PhysicalDimension.Height;
                 precisionImageBrush = new ImageBrush()
@@ -121,7 +121,7 @@ namespace MsiImageIndexer.model
             set 
             {
                 currentIndexedImage = indexedImages[value];
-                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.AbsolutePath), false, false);
+                var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.OriginalString), false, false);
                 x_scale = imageInfo.PhysicalDimension.Width;
                 y_scale = imageInfo.PhysicalDimension.Height;
                 precisionImageBrush = new ImageBrush()

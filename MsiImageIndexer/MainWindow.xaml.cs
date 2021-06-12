@@ -84,7 +84,7 @@ namespace MsiImageIndexer
                         var imagesToIndex = images.Select(f => 
                             new IndexedImage 
                             {
-                                Image = new Uri(f.ToString()), 
+                                Image = new Uri(f.FullName), 
                                 MarkedPoints = new List<MarkedPoint>(), 
                                 PointsToMark = new ObservableCollection<NamedPoint>(this.viewModel.PointCollection.Points.ToList()) 
                             })
@@ -226,7 +226,7 @@ namespace MsiImageIndexer
             if (this.viewModel.CurrentNamedPoint == null)
                 return;
 
-            Bitmap bitMap = new Bitmap(this.viewModel.CurrentIndexedImage.Image.AbsolutePath);
+            Bitmap bitMap = new Bitmap(this.viewModel.CurrentIndexedImage.Image.OriginalString);
             System.Drawing.Color pixelColor = bitMap.GetPixel((int)this.viewModel.X, (int)this.viewModel.Y);
 
             MarkedPoint markedPoint = new MarkedPoint {  };

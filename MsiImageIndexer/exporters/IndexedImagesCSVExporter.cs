@@ -22,7 +22,7 @@ namespace MsiImageIndexer.exporters
                 // Fill the rest
                 foreach(IndexedImage indexedImage in indexedImages) 
                 {
-                    writer.Write($"\"{indexedImage.Image.AbsolutePath}\"");
+                    writer.Write($"\"{indexedImage.Image.OriginalString}\"");
                     foreach(NamedPoint point in points.Points) 
                     {
                         MarkedPoint mp = indexedImage.MarkedPoints.Where(mp => mp.NamedPoint.Equals(point)).SingleOrDefault();
