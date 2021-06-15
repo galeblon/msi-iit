@@ -12,14 +12,14 @@ namespace MsiImageIndexer.model
     public class ViewModel : INotifyPropertyChanged
     {
         public bool IsConfigLoaded { get { return pointCollection != null; } }
-        public bool IsDataLoaded { get { return indexedImages.Count > 0;  } }
+        public bool IsDataLoaded { get { return indexedImages.Count > 0; } }
 
         [NonSerialized]
         private PointCollection pointCollection = null;
         public PointCollection PointCollection
         {
             get { return pointCollection; }
-            set 
+            set
             {
                 pointCollection = value;
                 UpdateProperty("PointCollection");
@@ -28,10 +28,10 @@ namespace MsiImageIndexer.model
         }
 
         private string configNameLabel = "No configuration loaded.";
-        public string ConfigNameLabel 
+        public string ConfigNameLabel
         {
             get { return configNameLabel; }
-            set 
+            set
             {
                 configNameLabel = value;
                 UpdateProperty("ConfigNameLabel");
@@ -41,13 +41,13 @@ namespace MsiImageIndexer.model
 
         private double x = 0;
         private double y = 0;
-        public double X 
+        public double X
         {
 
             get { return x; }
-            set 
+            set
             {
-                x = value;
+                x = Math.Round(value, 1);
                 UpdateProperty("CurrentPositionLabel");
             }
         }
@@ -56,7 +56,7 @@ namespace MsiImageIndexer.model
             get { return y; }
             set
             {
-                y = value;
+                y = Math.Round(value, 1);
                 UpdateProperty("CurrentPositionLabel");
             }
         }
@@ -75,17 +75,17 @@ namespace MsiImageIndexer.model
         }
 
 
-        public string CurrentPositionLabel 
+        public string CurrentPositionLabel
         {
-            get { return $"X = [{x, 10:0.##}]\tY = [{y, 10:0.##}]"; }
+            get { return $"X = [{x,10:0.##}]\tY = [{y,10:0.##}]"; }
         }
 
         [NonSerialized]
         private List<IndexedImage> indexedImages = new List<IndexedImage>();
-        public List<IndexedImage> IndexedImages 
+        public List<IndexedImage> IndexedImages
         {
             get { return indexedImages; }
-            set 
+            set
             {
                 indexedImages = value;
                 UpdateProperty("IndexedImages");
@@ -95,13 +95,13 @@ namespace MsiImageIndexer.model
 
         [NonSerialized]
         private IndexedImage currentIndexedImage = null;
-        public IndexedImage CurrentIndexedImage 
+        public IndexedImage CurrentIndexedImage
         {
-            get 
-            { 
+            get
+            {
                 return currentIndexedImage;
             }
-            set 
+            set
             {
                 currentIndexedImage = value;
                 var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.LocalPath), false, false);
@@ -122,10 +122,10 @@ namespace MsiImageIndexer.model
                 UpdateProperty("PrecisionImageBrush");
             }
         }
-        public int CurrentIndexedImageIndex 
+        public int CurrentIndexedImageIndex
         {
             get { return indexedImages != null ? indexedImages.IndexOf(currentIndexedImage) : 0; }
-            set 
+            set
             {
                 currentIndexedImage = indexedImages[value];
                 var imageInfo = Image.FromStream(File.OpenRead(currentIndexedImage.Image.LocalPath), false, false);
@@ -149,10 +149,10 @@ namespace MsiImageIndexer.model
 
         [NonSerialized]
         private NamedPoint currentNamedPoint = null;
-        public NamedPoint CurrentNamedPoint 
+        public NamedPoint CurrentNamedPoint
         {
             get { return currentNamedPoint; }
-            set 
+            set
             {
                 currentNamedPoint = value;
                 UpdateProperty("CurrentNamedPoint");
@@ -160,9 +160,9 @@ namespace MsiImageIndexer.model
             }
         }
         public int CurrentNamedPointIndex
-        {  
+        {
             get { return currentIndexedImage != null ? currentIndexedImage.PointsToMark.IndexOf(currentNamedPoint) : 0; }
-            set 
+            set
             {
                 currentNamedPoint = currentIndexedImage.PointsToMark[value];
                 UpdateProperty("CurrentNamedPoint");
@@ -176,10 +176,10 @@ namespace MsiImageIndexer.model
         private readonly int maximumZoomLevel = 1000;
         [NonSerialized]
         private int zoomLevel = 100;
-        public int ZoomLevel 
+        public int ZoomLevel
         {
             get { return zoomLevel; }
-            set 
+            set
             {
                 zoomLevel = Math.Min(Math.Max(value, minimumZoomLevel), maximumZoomLevel);
                 UpdateProperty("ZoomLevel");
@@ -188,10 +188,10 @@ namespace MsiImageIndexer.model
 
         [NonSerialized]
         private ImageBrush precisionImageBrush = null;
-        public ImageBrush PrecisionImageBrush 
+        public ImageBrush PrecisionImageBrush
         {
             get { return precisionImageBrush; }
-            set 
+            set
             {
                 precisionImageBrush = value;
                 UpdateProperty("PrecisionImageBrush");
@@ -200,7 +200,7 @@ namespace MsiImageIndexer.model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void UpdateProperty(string name) 
+        protected void UpdateProperty(string name)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
