@@ -59,6 +59,7 @@ namespace MsiImageIndexer
                         foreach (NamedPoint pt in this.viewModel.PointCollection.Points)
                             pt.ImageRefPath = $"{System.IO.Path.GetDirectoryName(fileName)}/{pt.ImageRefPath}";
                         this.viewModel.ConfigNameLabel = fileName;
+                        this.RefreshAll();
                     } 
                     catch (Exception ex) 
                     {
@@ -94,6 +95,7 @@ namespace MsiImageIndexer
                         this.viewModel.IndexedImages = imagesToIndex;
                         this.viewModel.CurrentIndexedImage = imagesToIndex.FirstOrDefault();
                         NamedPointsComboBox.SelectedIndex = 0;
+                        this.RefreshAll();
                         MessageBox.Show($"Loaded {imagesToIndex.Count()} images to index", "Data load succes");
                     }
                     catch(Exception ex)

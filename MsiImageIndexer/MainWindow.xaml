@@ -10,6 +10,7 @@
         <ResourceDictionary>
             <converters:IndexConverter x:Key="IndexConverter"/>
             <converters:HalfConverter x:Key="HalfConverter"/>
+            <converters:ImageConverter x:Key="ImageConverter"/>
             <RoutedCommand x:Key="ZoomInCommand"/>
             <RoutedCommand x:Key="ZoomOutCommand"/>
             <RoutedCommand x:Key="NextImageCommand"/>
@@ -138,7 +139,7 @@
                 </DockPanel>
                 <Canvas x:Name="MainCanvas" Margin="0,0,0,0" MouseMove="MainCanvas_MouseMove" MouseLeftButtonDown="MainCavas_OnClickLeftDown"  Cursor="Cross">
                     <Canvas.Background>
-                        <ImageBrush ImageSource="{Binding CurrentIndexedImage.Image}"/>
+                        <ImageBrush ImageSource="{Binding CurrentIndexedImage.Image, Converter={StaticResource ImageConverter}}"/>
                     </Canvas.Background>
                 </Canvas>
             </DockPanel>

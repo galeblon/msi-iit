@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MsiImageIndexer.helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -112,7 +113,7 @@ namespace MsiImageIndexer.model
                 UpdateProperty("CurrentPositionLabel");
                 precisionImageBrush = new ImageBrush()
                 {
-                    ImageSource = new BitmapImage(value.Image)
+                    ImageSource = ImageOrientationHelper.OrientImage(value.Image)
                 };
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
@@ -136,7 +137,7 @@ namespace MsiImageIndexer.model
                 UpdateProperty("CurrentPositionLabel");
                 precisionImageBrush = new ImageBrush()
                 {
-                    ImageSource = new BitmapImage(currentIndexedImage.Image)
+                    ImageSource = ImageOrientationHelper.OrientImage(currentIndexedImage.Image)
                 };
                 UpdateProperty("CurrentIndexedImage");
                 UpdateProperty("CurrentIndexedImageIndex");
