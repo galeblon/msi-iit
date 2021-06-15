@@ -363,7 +363,7 @@ namespace MsiImageIndexer
                     Height = 4,
                     StrokeThickness = 4,
                     Fill = new SolidColorBrush(mp.Colour),
-                    Margin = new Thickness(x, y, 0, 0)
+                    Margin = new Thickness(x-2, y-2, 0, 0)
                 };
                 canvas.Children.Add(pt);
 
