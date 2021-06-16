@@ -92,6 +92,8 @@ namespace MsiImageIndexer
                                 PointsToMark = new ObservableCollection<NamedPoint>(this.viewModel.PointCollection.Points.ToList()) 
                             })
                             .ToList();
+                        if (imagesToIndex.Count == 0)
+                            throw new ArgumentNullException("No images found in given directory.");
                         this.viewModel.IndexedImages = imagesToIndex;
                         this.viewModel.CurrentIndexedImage = imagesToIndex.FirstOrDefault();
                         NamedPointsComboBox.SelectedIndex = 0;
